@@ -32,6 +32,7 @@ public class LoginScreen implements Screen,InputProcessor{
 	private Rectangle loginBounds = new Rectangle(w/8, h/3, 9*w/16, h/16);
 	private Rectangle signUpBounds = new Rectangle(w/8, 4*h/16, 3*w/4, h/16);
 	private Rectangle rememberBounds = new Rectangle(3*w/4,h/3,w/8,h/16);
+	private Rectangle forgotBounds = new Rectangle(w/8,13*h/64,3*w/4,h/32);
 	
 	private TextFieldStyle style;
 	private TextField email;
@@ -42,8 +43,10 @@ public class LoginScreen implements Screen,InputProcessor{
 	private int selected = 0;
 	
 	private TextButtonStyle buttonStyle;
+	private TextButtonStyle plainButtonStyle;
 	private TextButton login;
 	private TextButton signUp;
+	private TextButton forgot;
 	
 	private CheckBoxStyle checkStyle;
 	private CheckBox remember;
@@ -81,17 +84,24 @@ public class LoginScreen implements Screen,InputProcessor{
 		signUp = new TextButton("Sign Up",buttonStyle);
 			signUp.setBounds(signUpBounds.x,signUpBounds.y,signUpBounds.width,signUpBounds.height);
 		
+		plainButtonStyle = new TextButtonStyle();
+			plainButtonStyle.font=u.assets.medium;
+			plainButtonStyle.fontColor=Color.WHITE;
+			plainButtonStyle.checkedFontColor=Color.GRAY;
+		forgot = new TextButton("Forgot Password?",plainButtonStyle);
+			forgot.setBounds(forgotBounds.x, forgotBounds.y, forgotBounds.width, forgotBounds.height);
 			
 		/** CheckBox setup */
 		checkStyle = new CheckBoxStyle();
 			checkStyle.up=u.assets.checkBoxStyleOff;
 			checkStyle.down=u.assets.checkBoxStyleOn;
+			checkStyle.checked=u.assets.checkBoxStyleOn;
 			checkStyle.font=u.assets.small;
 			checkStyle.fontColor=Color.WHITE;
 		remember = new CheckBox("Remember", checkStyle);
 			remember.align(Align.center);
 			remember.setBounds(rememberBounds.x,rememberBounds.y,rememberBounds.width,rememberBounds.height);
-			//remember.toggle();
+			
 	}
 	
 	@Override
@@ -127,6 +137,7 @@ public class LoginScreen implements Screen,InputProcessor{
 		login.draw(pic, 1);
 		signUp.draw(pic, 1);
 		remember.draw(pic, 1);
+		forgot.draw(pic, 1);
 		pic.end();
 		
 	}
@@ -207,6 +218,7 @@ public class LoginScreen implements Screen,InputProcessor{
 		
 		if(Intersector.overlaps(touch, loginBounds)){login.toggle();}
 		else if(Intersector.overlaps(touch, signUpBounds)){signUp.toggle();}
+		else if(Intersector.overlaps(touch, forgotBounds)){forgot.toggle();}
 		return true;
 	}
 
@@ -221,8 +233,9 @@ public class LoginScreen implements Screen,InputProcessor{
 		if(Intersector.overlaps(touch, emailBounds)){selected = 1;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if(Intersector.overlaps(touch, passBounds)){selected = 2;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if(Intersector.overlaps(touch, loginBounds)){login.toggle();}
-		else if(Intersector.overlaps(touch, signUpBounds)){signUp.toggle();}
+		else if(Intersector.overlaps(touch, signUpBounds)){signUp.toggle();u.setScreen(new SignUpScreen(u));}
 		else if(Intersector.overlaps(touch, rememberBounds)){remember.toggle();}
+		else if(Intersector.overlaps(touch, forgotBounds)){forgot.toggle();}
 		
 		return true;
 	}
