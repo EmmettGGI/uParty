@@ -25,7 +25,8 @@ public class uParty extends Game {
 		
 		client.addListener(new ThreadedListener(new Listener(){
 			 public void received (Connection connection, Object object) {
-		          /*if (object instanceof SomeResponse) {
+		         System.out.println("I recieved something");
+				 /*if (object instanceof SomeResponse) {
 		             SomeResponse response = (SomeResponse)object;
 		             System.out.println(response.text);
 		          }*/
@@ -39,8 +40,9 @@ public class uParty extends Game {
 	public void connect(){
 		if(!client.isConnected()){
 			try {
-				client.connect(5000, "localhost", 36693);
+				
 				client.start();
+				client.connect(5000, "localhost", 36693);
 				Network.register(client);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -52,6 +54,7 @@ public class uParty extends Game {
 	public void send(Sendable s){
 		connect();
 		client.sendTCP(s);
+		
 	}
 
 	

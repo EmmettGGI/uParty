@@ -3,6 +3,7 @@ package com.GGI.uParty.Screens;
 import java.util.Date;
 
 import com.GGI.uParty.uParty;
+import com.GGI.uParty.Network.Sendable;
 import com.GGI.uParty.Network.SignUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -272,7 +273,9 @@ public class SignUpScreen implements Screen, InputProcessor{
 		else if(Intersector.overlaps(touch, cpassB)){selector = 7;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if (Intersector.overlaps(touch, backBounds)){back.toggle();u.setScreen(new LoginScreen(u));}
 		else if(Intersector.overlaps(touch, signUpBounds)){signUp.toggle();
+			//u.send(new Sendable());//for testing only	
 			if(n.length()>0&&m.length()>0&&d.length()>0&&y.length()>0&&e.length()>0&&p.length()>0&&cp.length()>0){
+				
 				Date bday = null;
 				try{
 					bday = new Date();
