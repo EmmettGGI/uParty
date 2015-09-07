@@ -2,9 +2,12 @@ package com.GGI.uParty;
 
 import java.io.IOException;
 
+import com.GGI.uParty.Network.Err;
 import com.GGI.uParty.Network.Network;
+import com.GGI.uParty.Network.Profile;
 import com.GGI.uParty.Network.Sendable;
 import com.GGI.uParty.Screens.LoginScreen;
+import com.GGI.uParty.Screens.SignUpScreen;
 import com.badlogic.gdx.Game;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -25,11 +28,21 @@ public class uParty extends Game {
 		
 		client.addListener(new ThreadedListener(new Listener(){
 			 public void received (Connection connection, Object object) {
-		         System.out.println("I recieved something");
-				 /*if (object instanceof SomeResponse) {
-		             SomeResponse response = (SomeResponse)object;
-		             System.out.println(response.text);
-		          }*/
+		         //System.out.println("I recieved something");
+				 
+		         if (object instanceof Err) {
+					 Err e = (Err)object;
+		             if(getScreen() instanceof SignUpScreen){
+		            	 SignUpScreen s = (SignUpScreen)getScreen();
+		            	 s.error=e.message;
+		            	 s.err.setText(s.error);
+		             }
+		         }
+		         
+		         else if(object instanceof Profile){
+		        	 assets.myProfile=(Profile)object;
+		        	 System.out.println("Got profile: " + assets.myProfile.name);
+		         }
 		       }
 			
 		}));

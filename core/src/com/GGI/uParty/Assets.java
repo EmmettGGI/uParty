@@ -1,5 +1,6 @@
 package com.GGI.uParty;
 
+import com.GGI.uParty.Network.Profile;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class Assets {
 	public uParty u;
 	public float w = Gdx.graphics.getWidth(),h=Gdx.graphics.getHeight();
+	
+	/**My Profile*/
+	public Profile myProfile;
 	
 	/**Colors*/
 	public Color orange = new Color(247f/255f,148f/255f,29f/255f,1f);

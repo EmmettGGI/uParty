@@ -1,6 +1,7 @@
 package com.GGI.uParty.Screens;
 
 import com.GGI.uParty.uParty;
+import com.GGI.uParty.Network.Login;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -232,7 +233,7 @@ public class LoginScreen implements Screen,InputProcessor{
 		
 		if(Intersector.overlaps(touch, emailBounds)){selected = 1;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if(Intersector.overlaps(touch, passBounds)){selected = 2;Gdx.input.setOnscreenKeyboardVisible(true);}
-		else if(Intersector.overlaps(touch, loginBounds)){login.toggle();}
+		else if(Intersector.overlaps(touch, loginBounds)){login.toggle();Login l = new Login();l.email=e;l.pass=p;u.send(l);}
 		else if(Intersector.overlaps(touch, signUpBounds)){signUp.toggle();u.setScreen(new SignUpScreen(u));}
 		else if(Intersector.overlaps(touch, rememberBounds)){remember.toggle();}
 		else if(Intersector.overlaps(touch, forgotBounds)){forgot.toggle();}

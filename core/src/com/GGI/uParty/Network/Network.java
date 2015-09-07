@@ -12,6 +12,9 @@ public class Network {
 		kryo.register(Sendable.class);
 		kryo.register(SignUp.class);
 		kryo.register(Date.class);
+		kryo.register(Err.class);
+		kryo.register(Profile.class);
+		kryo.register(Login.class);
 	}
 	
 }

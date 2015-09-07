@@ -47,7 +47,7 @@ public class SignUpScreen implements Screen, InputProcessor{
 	private TextField email;
 	private TextField pass;
 	private TextField cpass;
-	private TextField err;
+	public TextField err;
 	
 	private TextButtonStyle buttonStyle;
 	private TextButtonStyle plainButtonStyle;
@@ -56,7 +56,7 @@ public class SignUpScreen implements Screen, InputProcessor{
 	
 	
 	private String n="",m="",d="",y="",e="",p="",cp="";
-	private String error = "";
+	public String error = "";
 	
 	private int selector = 0;
 	
