@@ -114,7 +114,7 @@ public class LoginScreen implements Screen,InputProcessor{
 	@Override
 	public void render(float delta) {
 		if(u.assets.myProfile!=null){
-			if(u.assets.myProfile.verr){}
+			if(u.assets.myProfile.verr){u.setScreen(new MainScreen(u));}
 			else{u.setScreen(new ConfirmationScreen(u));}
 		}
 		

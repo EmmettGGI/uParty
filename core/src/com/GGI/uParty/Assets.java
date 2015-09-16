@@ -28,6 +28,9 @@ public class Assets {
 	public TextureRegionDrawable buttonStyleDown;
 	public TextureRegionDrawable checkBoxStyleOn;
 	public TextureRegionDrawable checkBoxStyleOff;
+	public TextureRegion voteButtonUp;
+	public TextureRegion voteButtonDown;
+	
 	
 	/**Fonts*/
 	public BitmapFont small;
@@ -65,6 +68,8 @@ public class Assets {
 		buttonStyleDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("Images/ButtonStyleDown.png"))));
 		checkBoxStyleOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("Images/CheckBoxStyleOn.png"))));
 		checkBoxStyleOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("Images/CheckBoxStyleOff.png"))));
+		voteButtonUp = new TextureRegion(new Texture(Gdx.files.internal("Images/voteButtonUp.png")));
+		voteButtonDown = new TextureRegion(new Texture(Gdx.files.internal("Images/voteButtonDown.png")));
 	
 	}
 }

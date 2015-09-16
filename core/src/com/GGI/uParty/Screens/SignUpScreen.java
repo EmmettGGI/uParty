@@ -108,6 +108,7 @@ public class SignUpScreen implements Screen, InputProcessor{
 
 	@Override
 	public void render(float delta) {
+		if(u.assets.myProfile!=null&&!u.assets.myProfile.verr){u.setScreen(new ConfirmationScreen(u));}
 		Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

@@ -1,6 +1,8 @@
 package com.GGI.uParty.Screens;
 
 import com.GGI.uParty.uParty;
+import com.GGI.uParty.Network.ResendConfirmation;
+import com.GGI.uParty.Network.Verify;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -31,7 +33,8 @@ public class ConfirmationScreen implements Screen, InputProcessor{
 	private Rectangle resendBounds = new Rectangle(w/8, h/2-h/12, 3*w/4, h/16);
 	private Rectangle contBounds = new Rectangle(w/8, h/3, 3*w/4, h/16);
 	
-	private String code;
+	private String code = "";
+	private String message = "";
 	
 	private TextButtonStyle buttonStyle;
 	private TextButton resend;
@@ -79,6 +82,10 @@ public class ConfirmationScreen implements Screen, InputProcessor{
 		u.assets.large.setColor(u.assets.orange);
 		layout.setText(u.assets.large, "We sent you an email!");
 		u.assets.large.draw(pic, "We sent you an email!", w/2-layout.width/2, 2*h/3);
+		
+		u.assets.medium.setColor(Color.RED);
+		layout.setText(u.assets.medium, message);
+		u.assets.medium.draw(pic, message, w/2-layout.width/2, h/4);
 		
 		confirmCode.draw(pic, 1);
 		resend.draw(pic, 1);
@@ -135,7 +142,7 @@ public class ConfirmationScreen implements Screen, InputProcessor{
 			code=code.substring(0, code.length()-1);
 		}
 		else if((character == '\r' || character == '\n')){}
-		else{
+		else if(Character.isDigit(character)){
 			code+=character;
 		}}
 		code=code.replaceAll("\\p{Cntrl}","");
@@ -161,8 +168,13 @@ public class ConfirmationScreen implements Screen, InputProcessor{
 		Gdx.input.setOnscreenKeyboardVisible(false);
 		selected = 0;
 		
-		if(Intersector.overlaps(touch, contBounds)){cont.toggle();}
-		else if(Intersector.overlaps(touch, resendBounds)){resend.toggle();}
+		if(Intersector.overlaps(touch, contBounds)){cont.toggle();
+			if(code!=null&&code.length()>0&&Integer.parseInt(code)==u.assets.myProfile.verrCode){u.assets.myProfile.verr=true;u.send(new Verify(u.assets.myProfile.email));}
+			else{message="Wrong Code";}
+			}
+			
+		else if(Intersector.overlaps(touch, resendBounds)){resend.toggle();message = "New code sent!";u.send(new ResendConfirmation(u.assets.myProfile.email));}
+		else if(Intersector.overlaps(touch, codeBounds)){selected = 1;}
 		return true;
 	}
 
