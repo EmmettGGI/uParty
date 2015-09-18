@@ -169,7 +169,7 @@ public class ConfirmationScreen implements Screen, InputProcessor{
 		selected = 0;
 		
 		if(Intersector.overlaps(touch, contBounds)){cont.toggle();
-			if(code!=null&&code.length()>0&&Integer.parseInt(code)==u.assets.myProfile.verrCode){u.assets.myProfile.verr=true;u.send(new Verify(u.assets.myProfile.email));}
+			if(code!=null&&code.length()>0&&Integer.parseInt(code)==u.assets.myProfile.verrCode){u.assets.myProfile.verr=true;u.send(new Verify(u.assets.myProfile.email));u.setScreen(new MainScreen(u));}
 			else{message="Wrong Code";}
 			}
 			

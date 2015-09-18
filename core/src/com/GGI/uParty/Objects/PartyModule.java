@@ -38,6 +38,7 @@ public class PartyModule {
 	public PartyModule(uParty u,Party p){
 		this.u=u;
 		this.p=p;
+		
 		pic = new SpriteBatch();
 		shape = new ShapeRenderer();
 		bounds = new Rectangle();
@@ -62,9 +63,9 @@ public class PartyModule {
 		voteDown.setBounds(voteDownB.x, voteDownB.y, voteDownB.width, voteDownB.height);
 		
 		shape.begin(ShapeType.Filled);
-		shape.setColor(Color.DARK_GRAY);
-		shape.rect(bounds.x,bounds.y,bounds.width,bounds.height);
 		shape.setColor(u.assets.dark);
+		shape.rect(bounds.x,bounds.y,bounds.width,bounds.height);
+		shape.setColor(Color.BLACK);
 		shape.rect(bounds.x,bounds.y,bounds.width,.05f*bounds.height);
 		//shape.rect(bounds.x,bounds.y+.95f*bounds.height,bounds.width,.05f*bounds.height);
 		shape.end();

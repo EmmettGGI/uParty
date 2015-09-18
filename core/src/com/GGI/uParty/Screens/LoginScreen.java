@@ -28,6 +28,11 @@ public class LoginScreen implements Screen,InputProcessor{
 	private GlyphLayout layout = new GlyphLayout();
 	private int s = 0;
 	
+	public String error="";
+	public TextField err;
+	private TextFieldStyle errorStyle;
+	private Rectangle errB = new Rectangle(0,9*h/16,w,h/16);
+	
 	private Rectangle emailBounds = new Rectangle(w/8, h/2, 3*w/4, h/16);
 	private Rectangle passBounds = new Rectangle(w/8,h/2-h/12,3*w/4,h/16);
 	private Rectangle loginBounds = new Rectangle(w/8, h/3, 9*w/16, h/16);
@@ -92,6 +97,11 @@ public class LoginScreen implements Screen,InputProcessor{
 		forgot = new TextButton("Forgot Password?",plainButtonStyle);
 			forgot.setBounds(forgotBounds.x, forgotBounds.y, forgotBounds.width, forgotBounds.height);
 			
+		errorStyle = new TextFieldStyle();
+			errorStyle.font = u.assets.medium;
+			errorStyle.fontColor=Color.RED;
+			err = new TextField(error,errorStyle);err.setBounds(errB.x,errB.y,errB.width,errB.height);err.setAlignment(Align.center);
+			
 		/** CheckBox setup */
 		checkStyle = new CheckBoxStyle();
 			checkStyle.up=u.assets.checkBoxStyleOff;
@@ -144,6 +154,7 @@ public class LoginScreen implements Screen,InputProcessor{
 		signUp.draw(pic, 1);
 		remember.draw(pic, 1);
 		forgot.draw(pic, 1);
+		err.draw(pic, 1);
 		pic.end();
 		
 	}

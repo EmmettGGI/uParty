@@ -1,6 +1,7 @@
 package com.GGI.uParty;
 
 import com.GGI.uParty.Network.Profile;
+import com.GGI.uParty.Objects.PartyList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class Assets {
 	public uParty u;
 	public float w = Gdx.graphics.getWidth(),h=Gdx.graphics.getHeight();
+	public PartyList parties;
 	
 	/**My Profile*/
 	public Profile myProfile;
@@ -41,6 +43,7 @@ public class Assets {
 		this.u=u;
 		loadImages();
 		loadFonts();
+		parties = new PartyList(u);
 	}
 
 

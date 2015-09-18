@@ -5,6 +5,7 @@ package com.GGI.uParty.Screens;
 
 import com.GGI.uParty.uParty;
 import com.GGI.uParty.Network.Party;
+import com.GGI.uParty.Network.Refresh;
 import com.GGI.uParty.Objects.PartyList;
 import com.GGI.uParty.Objects.PartyModule;
 import com.badlogic.gdx.Gdx;
@@ -16,6 +17,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 /**
  * @author Emmett
@@ -29,14 +34,29 @@ public class MainScreen implements Screen, InputProcessor{
 	
 	private ShapeRenderer shape = new ShapeRenderer();
 	
-	public PartyList test = new PartyList();
+	public PartyList parties;
 	private int scrolled = 0;
+	
+	private TextButton newParty;
+	private TextButtonStyle buttonStyle;
+	private Rectangle pBounds = new Rectangle(.85f*w,.05f*w,.1f*w,.1f*w);
+	
 	public MainScreen(uParty u){
 		this.u=u;
-		Party p = new Party();
 		
-		test.add(new PartyModule(u,p));
-		test.add(new PartyModule(u,p));
+		u.send(new Refresh(u.assets.myProfile));
+		
+		
+		
+		/**Button setup*/
+		buttonStyle = new TextButtonStyle();
+			buttonStyle.font=u.assets.large;
+			buttonStyle.fontColor=Color.WHITE;
+			buttonStyle.up=u.assets.buttonStyleUp;
+			buttonStyle.down=u.assets.buttonStyleDown;
+			buttonStyle.checked=u.assets.buttonStyleDown;
+		newParty = new TextButton("+",buttonStyle);
+			newParty.setBounds(pBounds.x, pBounds.y, pBounds.width, pBounds.height);
 		
 	}
 	
@@ -48,9 +68,10 @@ public class MainScreen implements Screen, InputProcessor{
 
 	@Override
 	public void render(float delta) {
+		parties = u.assets.parties;
 		Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		test.render(scrolled);
+		parties.render(scrolled);
 		
 		shape.begin(ShapeType.Filled);
 		shape.setColor(u.assets.orange);
@@ -65,6 +86,7 @@ public class MainScreen implements Screen, InputProcessor{
 		u.assets.medium.draw(pic, "uParty", .05f*w, .98f*h);
 		layout.setText(u.assets.medium, u.assets.myProfile.name);
 		u.assets.medium.draw(pic, u.assets.myProfile.name, .95f*w-layout.width, .98f*h);
+		newParty.draw(pic, 1);
 		pic.end();
 		
 	}
@@ -119,14 +141,18 @@ public class MainScreen implements Screen, InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		screenY=(int) (h-screenY);
+		Rectangle touch = new Rectangle(screenX,screenY,1,1);
+		if(Intersector.overlaps(touch, pBounds)){newParty.toggle();}
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		screenY=(int) (h-screenY);
+		Rectangle touch = new Rectangle(screenX,screenY,1,1);
+		if(Intersector.overlaps(touch, pBounds)){newParty.toggle(); u.setScreen(new CreatePartyScreen(u));}
+		return true;
 	}
 
 	@Override
@@ -143,7 +169,10 @@ public class MainScreen implements Screen, InputProcessor{
 
 	@Override
 	public boolean scrolled(int amount) {
-		scrolled+=amount;
+		scrolled+=10*amount;
+		if(parties.height-scrolled<=.825f*h){scrolled-=10*amount;}
+		if(scrolled<0){scrolled = 0;}
+		
 		return true;
 	}
 
