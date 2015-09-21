@@ -7,9 +7,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -21,13 +20,15 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 	private SpriteBatch pic = new SpriteBatch();
 	private float w = Gdx.graphics.getWidth(),h = Gdx.graphics.getHeight();
 	private GlyphLayout layout = new GlyphLayout();
+	private int select = 0;
 	
 	private Rectangle nameB = new Rectangle(w/4,13*h/16,w/2,h/16);
 	private Rectangle hourB = new Rectangle(4*w/16,23*h/32,w/8,h/16);
 	private Rectangle minB = new Rectangle(7*w/16,23*h/32,w/8,h/16);
-	private Rectangle descriptionB = new Rectangle(w/8,9*h/16,3*w/4,h/8);
-	private Rectangle whereB = new Rectangle(w/8,13*h/32,3*w/4,h/8);
+	private Rectangle descriptionB = new Rectangle(w/8,21*h/32,3*w/4,h/32);
+	private Rectangle whereB = new Rectangle(w/8,19*h/32,3*w/4,h/32);
 	private Rectangle tSwitchB = new Rectangle(10*w/16,23*h/32,w/8,h/16);
+	private Rectangle createPartyB = new Rectangle(w/8,16*h/32,3*w/4,h/16);
 	
 	private TextButtonStyle buttonStyle;
 	private TextButton createParty;
@@ -35,6 +36,7 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 	private boolean isPm=false;
 	
 	private TextFieldStyle style;
+	private TextFieldStyle styleS;
 	private TextField name;
 	private TextField hour;
 	private TextField min;
@@ -43,7 +45,7 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 	
 	
 	
-	public String n="",d="",hr="12",m="00",wr="";
+	public String n="",d="",hr="",m="",wr="";
 	
 	public CreatePartyScreen(uParty u) {
 		this.u=u;
@@ -53,21 +55,27 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 			style.font=u.assets.medium;
 			style.fontColor=u.assets.orange;
 			style.background=u.assets.textStyleBorder;
+		styleS = new TextFieldStyle();
+			styleS.font=u.assets.small;
+			styleS.fontColor=u.assets.orange;
+			styleS.background=u.assets.textStyleBorder;
 		name = new TextField(n,style);
 			name.setBounds(nameB.x, nameB.y, nameB.width, nameB.height);
 			name.setMessageText("Event Name");
 			name.setAlignment(Align.center);
 		hour = new TextField(hr,style);
 			hour.setBounds(hourB.x, hourB.y, hourB.width, hourB.height);
+			hour.setMessageText("HH");
 			hour.setAlignment(Align.center);
 		min = new TextField(m,style);
 			min.setBounds(minB.x, minB.y, minB.width, minB.height);
+			min.setMessageText("MM");
 			min.setAlignment(Align.center);
-		description = new TextField(d,style);
+		description = new TextField(d,styleS);
 			description.setBounds(descriptionB.x, descriptionB.y, descriptionB.width, descriptionB.height);
 			description.setMessageText("Event Description");
 			description.setAlignment(Align.center);
-		where = new TextField(wr,style);
+		where = new TextField(wr,styleS);
 			where.setBounds(whereB.x, whereB.y, whereB.width, whereB.height);
 			where.setMessageText("Event Location");
 			where.setAlignment(Align.center);
@@ -82,12 +90,14 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 			buttonStyle.down=u.assets.buttonStyleDown;
 			buttonStyle.checked=u.assets.buttonStyleDown;
 		tSwitch = new TextButton("AM",buttonStyle);
-				tSwitch.setBounds(tSwitchB.x, tSwitchB.y, tSwitchB.width, tSwitchB.height);
+			tSwitch.setBounds(tSwitchB.x, tSwitchB.y, tSwitchB.width, tSwitchB.height);
+		createParty = new TextButton("Create Event",buttonStyle);
+			createParty.setBounds(createPartyB.x, createPartyB.y, createPartyB.width, createPartyB.height);
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+		Gdx.input.setInputProcessor(this);
 		
 	}
 
@@ -104,6 +114,7 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 		description.draw(pic, 1);
 		where.draw(pic, 1);
 		tSwitch.draw(pic, 1);
+		createParty.draw(pic,1);
 		pic.end();
 		
 	}
@@ -152,20 +163,95 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
+		/**Name*/
+		if(select==1){if(character == ''&&n.length()>0){
+			n=n.substring(0, n.length()-1);
+		}
+		else if((character == '\r' || character == '\n')){}
+		else{
+			n+=character;
+		}}
+		
+		/**Hour*/
+		if(select==2){if(character == ''&&hr.length()>0){
+			hr=hr.substring(0, hr.length()-1);
+		}
+		else if((character == '\r' || character == '\n' || Character.isLetter(character) || hr.length()>=2 )){}
+		else{
+			hr+=character;
+		}}
+		
+		/**Min*/
+		if(select==3){if(character == ''&&m.length()>0){
+			m=m.substring(0, m.length()-1);
+		}
+		else if((character == '\r' || character == '\n'|| Character.isLetter(character) || m.length()>=2 )){}
+		else{
+			m+=character;
+		}}
+		
+		/**description*/
+		if(select==4){if(character == ''&&d.length()>0){
+			d=d.substring(0, d.length()-1);
+		}
+		else if((character == '\r' || character == '\n')){}
+		else{
+			d+=character;
+		}}
+		
+		/**where*/
+		if(select==5){if(character == ''&&wr.length()>0){
+			wr=wr.substring(0, wr.length()-1);
+		}
+		else if((character == '\r' || character == '\n')){}
+		else{
+			wr+=character;
+		}}
+		
+		n=n.replaceAll("\\p{Cntrl}","");
+		m=m.replaceAll("\\p{Cntrl}","");
+		hr=hr.replaceAll("\\p{Cntrl}","");
+		
+		d=d.replace(" ", "$space$");
+		d=d.replaceAll("\\p{Cntrl}","");
+		d=d.replace("$space$", " ");
+		
+		wr=wr.replace(" ", "$space$");
+		wr=wr.replaceAll("\\p{Cntrl}","");
+		wr=wr.replace("$space$", " ");
+		
+		name.setText(n);
+		hour.setText(hr);
+		min.setText(m);
+		description.setText(d);
+		where.setText(wr);
+		return true;
 	}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		select = 0;
+		Gdx.input.setOnscreenKeyboardVisible(false);
+		screenY = (int) (h-screenY);
+		Rectangle touch = new Rectangle(screenX,screenY,1,1);
+		if(Intersector.overlaps(touch, tSwitchB)){tSwitch.toggle();}
+		else if(Intersector.overlaps(touch,createPartyB)){createParty.toggle();}
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		screenY = (int) (h-screenY);
+		Rectangle touch = new Rectangle(screenX,screenY,1,1);
+		if(Intersector.overlaps(touch, tSwitchB)){tSwitch.toggle();isPm=!isPm;}
+		else if(Intersector.overlaps(touch,createPartyB)){createParty.toggle();}
+		else if(Intersector.overlaps(touch,nameB)){select = 1;Gdx.input.setOnscreenKeyboardVisible(true);}
+		else if(Intersector.overlaps(touch,hourB)){select = 2;Gdx.input.setOnscreenKeyboardVisible(true);}
+		else if(Intersector.overlaps(touch,minB)){select = 3;Gdx.input.setOnscreenKeyboardVisible(true);}
+		else if(Intersector.overlaps(touch,descriptionB)){select = 4;Gdx.input.setOnscreenKeyboardVisible(true);}
+		else if(Intersector.overlaps(touch,whereB)){select = 5;Gdx.input.setOnscreenKeyboardVisible(true);}
+		
+		return true;
 	}
 
 	@Override

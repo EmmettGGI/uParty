@@ -7,8 +7,8 @@ import com.GGI.uParty.uParty;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width=450;
-		config.height=800;
+		config.width=502;
+		config.height=900;
 		new LwjglApplication(new uParty(), config);
 	}
 }
