@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -25,10 +26,10 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 	private Rectangle nameB = new Rectangle(w/4,13*h/16,w/2,h/16);
 	private Rectangle hourB = new Rectangle(4*w/16,23*h/32,w/8,h/16);
 	private Rectangle minB = new Rectangle(7*w/16,23*h/32,w/8,h/16);
-	private Rectangle descriptionB = new Rectangle(w/8,21*h/32,3*w/4,h/32);
-	private Rectangle whereB = new Rectangle(w/8,19*h/32,3*w/4,h/32);
+	private Rectangle descriptionB = new Rectangle(w/8,18*h/32,3*w/4,h/8);
+	private Rectangle whereB = new Rectangle(w/8,13*h/32,3*w/4,h/8);
 	private Rectangle tSwitchB = new Rectangle(10*w/16,23*h/32,w/8,h/16);
-	private Rectangle createPartyB = new Rectangle(w/8,16*h/32,3*w/4,h/16);
+	private Rectangle createPartyB = new Rectangle(w/8,10*h/32,3*w/4,h/16);
 	
 	private TextButtonStyle buttonStyle;
 	private TextButton createParty;
@@ -40,8 +41,8 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 	private TextField name;
 	private TextField hour;
 	private TextField min;
-	private TextField description;
-	private TextField where;
+	private TextArea description;
+	private TextArea where;
 	
 	
 	
@@ -71,13 +72,13 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 			min.setBounds(minB.x, minB.y, minB.width, minB.height);
 			min.setMessageText("MM");
 			min.setAlignment(Align.center);
-		description = new TextField(d,styleS);
+		description = new TextArea(d,style);
 			description.setBounds(descriptionB.x, descriptionB.y, descriptionB.width, descriptionB.height);
-			description.setMessageText("Event Description");
+			description.setMessageText("\nEvent Description");
 			description.setAlignment(Align.center);
-		where = new TextField(wr,styleS);
+		where = new TextArea(wr,style);
 			where.setBounds(whereB.x, whereB.y, whereB.width, whereB.height);
-			where.setMessageText("Event Location");
+			where.setMessageText("\nEvent Location");
 			where.setAlignment(Align.center);
 		
 		
@@ -194,7 +195,7 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 		if(select==4){if(character == ''&&d.length()>0){
 			d=d.substring(0, d.length()-1);
 		}
-		else if((character == '\r' || character == '\n')){}
+		else if((character == '\r' || character == '\n')||d.length()>105){}
 		else{
 			d+=character;
 		}}
@@ -203,7 +204,7 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 		if(select==5){if(character == ''&&wr.length()>0){
 			wr=wr.substring(0, wr.length()-1);
 		}
-		else if((character == '\r' || character == '\n')){}
+		else if((character == '\r' || character == '\n')||wr.length()>105){}
 		else{
 			wr+=character;
 		}}
@@ -215,16 +216,36 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 		d=d.replace(" ", "$space$");
 		d=d.replaceAll("\\p{Cntrl}","");
 		d=d.replace("$space$", " ");
+		String dT = "\n   ";
+		String[] dBreak = d.split(" ");
+		String d1="",d2="",d3="";
+		for(int i = 0; i < dBreak.length;i++){
+			if(d1.length()<35){d1+=dBreak[i]+" ";}
+			else if(d2.length()<35){d2+=dBreak[i]+" ";}
+			else{d3+=dBreak[i]+" ";}
+		}
+		dT+=d1+"\n   "+d2+"\n   "+d3;
+		
 		
 		wr=wr.replace(" ", "$space$");
 		wr=wr.replaceAll("\\p{Cntrl}","");
 		wr=wr.replace("$space$", " ");
 		
+		String wrT = "\n   ";
+		String[] wrBreak = wr.split(" ");
+		String wr1="",wr2="",wr3="";
+		for(int i = 0; i < wrBreak.length;i++){
+			if(wr1.length()<35){wr1+=wrBreak[i]+" ";}
+			else if(wr2.length()<35){wr2+=wrBreak[i]+" ";}
+			else{wr3+=wrBreak[i]+" ";}
+		}
+		wrT+=wr1+"\n   "+wr2+"\n   "+wr3;
+		
 		name.setText(n);
 		hour.setText(hr);
 		min.setText(m);
-		description.setText(d);
-		where.setText(wr);
+		if(d.length()>0){description.setText(dT);}else{description.setText("");}
+		if(wr.length()>0){where.setText(wrT);}else{where.setText("");}
 		return true;
 	}
 

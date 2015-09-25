@@ -67,7 +67,7 @@ public class uParty extends Game {
 			try {
 				
 				client.start();
-				client.connect(5000, "localhost", 36693);
+				client.connect(5000, "52.89.96.208", 36693);
 				Network.register(client);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
