@@ -6,6 +6,7 @@ import com.GGI.uParty.Network.Err;
 import com.GGI.uParty.Network.Network;
 import com.GGI.uParty.Network.PList;
 import com.GGI.uParty.Network.Profile;
+import com.GGI.uParty.Network.Refresh;
 import com.GGI.uParty.Network.Sendable;
 import com.GGI.uParty.Objects.PartyList;
 import com.GGI.uParty.Screens.LoginScreen;
@@ -19,6 +20,7 @@ import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 public class uParty extends Game {
 	public Assets assets;
 	private Client client;
+	private boolean debug = true;
 	
 	
 	
@@ -67,7 +69,7 @@ public class uParty extends Game {
 			try {
 				
 				client.start();
-				client.connect(5000, "52.89.96.208", 36693);
+				client.connect(5000, debug ?"localhost":"52.89.96.208", 36693);
 				Network.register(client);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -78,8 +80,17 @@ public class uParty extends Game {
 	
 	public void send(Sendable s){
 		connect();
+		int t=0;
+		boolean noSend=true;
+		while(noSend&&t<=3)
+		try{
+		t++;
 		client.sendTCP(s);
-		
+		noSend=false;
+		}catch(Exception e){
+			System.out.println("Send error");
+			connect();
+		}
 	}
 
 	

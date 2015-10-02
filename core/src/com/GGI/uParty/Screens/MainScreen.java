@@ -144,6 +144,7 @@ public class MainScreen implements Screen, InputProcessor{
 		screenY=(int) (h-screenY);
 		Rectangle touch = new Rectangle(screenX,screenY,1,1);
 		if(Intersector.overlaps(touch, pBounds)){newParty.toggle();}
+		u.assets.parties.down(touch);
 		return true;
 	}
 
@@ -152,6 +153,7 @@ public class MainScreen implements Screen, InputProcessor{
 		screenY=(int) (h-screenY);
 		Rectangle touch = new Rectangle(screenX,screenY,1,1);
 		if(Intersector.overlaps(touch, pBounds)){newParty.toggle(); u.setScreen(new CreatePartyScreen(u));}
+		u.assets.parties.up(touch);
 		return true;
 	}
 

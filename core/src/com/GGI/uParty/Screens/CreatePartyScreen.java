@@ -1,6 +1,11 @@
 package com.GGI.uParty.Screens;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import com.GGI.uParty.uParty;
+import com.GGI.uParty.Network.CreateParty;
+import com.GGI.uParty.Network.Party;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -265,7 +270,25 @@ public class CreatePartyScreen implements Screen,InputProcessor{
 		screenY = (int) (h-screenY);
 		Rectangle touch = new Rectangle(screenX,screenY,1,1);
 		if(Intersector.overlaps(touch, tSwitchB)){tSwitch.toggle();isPm=!isPm;}
-		else if(Intersector.overlaps(touch,createPartyB)){createParty.toggle();}
+		else if(Intersector.overlaps(touch,createPartyB)){createParty.toggle();
+			if(n.length()>0&&hr.length()>0&&m.length()>0&&d.length()>0&&wr.length()>0){
+				Party p = new Party();
+				p.name=n;
+				p.where=wr;
+				p.description=d;
+				p.d=new Date();
+				p.d.setHours(!isPm?Integer.parseInt(hr):Integer.parseInt(hr)+11);
+				p.d.setMinutes(Integer.parseInt(m));
+				p.d.setSeconds(0);
+				p.owner=u.assets.myProfile;
+				
+				CreateParty cp = new CreateParty();
+				cp.p=p;
+				
+				u.send(cp);
+				u.setScreen(new MainScreen(u));
+			}
+		}
 		else if(Intersector.overlaps(touch,nameB)){select = 1;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if(Intersector.overlaps(touch,hourB)){select = 2;Gdx.input.setOnscreenKeyboardVisible(true);}
 		else if(Intersector.overlaps(touch,minB)){select = 3;Gdx.input.setOnscreenKeyboardVisible(true);}

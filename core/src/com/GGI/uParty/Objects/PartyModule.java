@@ -2,6 +2,8 @@ package com.GGI.uParty.Objects;
 
 import com.GGI.uParty.uParty;
 import com.GGI.uParty.Network.Party;
+import com.GGI.uParty.Network.VoteDown;
+import com.GGI.uParty.Network.VoteUp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -39,8 +42,7 @@ public class PartyModule {
 		this.u=u;
 		this.p=p;
 		
-		pic = new SpriteBatch();
-		shape = new ShapeRenderer();
+		
 		bounds = new Rectangle();
 		
 		voteUp = new ImageButton(new TextureRegionDrawable(u.assets.voteButtonUp),new TextureRegionDrawable(u.assets.voteButtonDown),new TextureRegionDrawable(u.assets.voteButtonDown));
@@ -57,10 +59,20 @@ public class PartyModule {
 	}
 	
 	public void render(){
+		if(pic==null){pic = new SpriteBatch();}
+		if(shape==null){shape = new ShapeRenderer();}
+		
 		voteUpB = new Rectangle(bounds.x+.85f*bounds.width,bounds.y+.625f*bounds.height,.1f*bounds.width,.35f*bounds.height);
 		voteDownB = new Rectangle(bounds.x+.85f*bounds.width,bounds.y+.075f*bounds.height,.1f*bounds.width,.35f*bounds.height);
 		voteUp.setBounds(voteUpB.x, voteUpB.y, voteUpB.width, voteUpB.height);
 		voteDown.setBounds(voteDownB.x, voteDownB.y, voteDownB.width, voteDownB.height);
+		
+		if(p.upVote.contains(u.assets.myProfile)){
+			voteUp.setChecked(true);
+		}
+		if(p.downVote.contains(u.assets.myProfile)){
+			voteDown.setChecked(true);
+		}
 		
 		shape.begin(ShapeType.Filled);
 		shape.setColor(u.assets.dark);
@@ -77,7 +89,7 @@ public class PartyModule {
 		u.assets.small.draw(pic, "Time: "+p.d.toString(), bounds.x+.05f*bounds.width, bounds.y+.7f*bounds.height);
 		if(p.description.length()>35){
 		u.assets.small.draw(pic, "Description: "+p.description.substring(0,35), bounds.x+.05f*bounds.width, bounds.y+.5f*bounds.height);
-		u.assets.small.draw(pic, p.description.substring(35,p.description.length()-1), bounds.x+.05f*bounds.width, bounds.y+.3f*bounds.height);
+		u.assets.small.draw(pic, p.description.substring(35,70)+" ...", bounds.x+.05f*bounds.width, bounds.y+.3f*bounds.height);
 		}else{u.assets.small.draw(pic, "Description: "+p.description, bounds.x+.05f*bounds.width, bounds.y+.5f*bounds.height);}
 		layout.setText(u.assets.medium, ""+p.vote);
 		u.assets.medium.setColor(u.assets.orange);
@@ -88,11 +100,17 @@ public class PartyModule {
 	}
 	
 	public boolean down(Rectangle touch){
-		return false;
+		if(!Intersector.overlaps(touch, bounds)){return false;}
+		//System.out.println("Down on module");
+		return true;
 		
 	}
 	public boolean up(Rectangle touch){
-		return false;
+		if(!Intersector.overlaps(touch, bounds)){return false;}
+		else if(Intersector.overlaps(touch, voteUpB)){u.send(new VoteUp(p,u.assets.myProfile));}
+		else if(Intersector.overlaps(touch, voteDownB)){u.send(new VoteDown(p,u.assets.myProfile));}
+		//System.out.println("Up on module");
+		return true;
 		
 	}
 }

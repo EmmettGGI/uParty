@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.GGI.uParty.uParty;
 import com.GGI.uParty.Network.Party;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 public class PartyList extends ArrayList<PartyModule>{
@@ -30,13 +31,21 @@ public class PartyList extends ArrayList<PartyModule>{
 		
 	}
 	
-	public boolean down(){
-		return false;
+	public boolean down(Rectangle touch){
+		if(!Intersector.overlaps(touch, new Rectangle(0,.945f*h-height,w,height))){return false;}
+		else{for(int i = 0; i < size();i++){
+			if(get(i).down(touch)){break;}
+		}}
+		return true;
 		
 	}
 	
-	public boolean up(){
-		return false;
+	public boolean up(Rectangle touch){
+		if(!Intersector.overlaps(touch, new Rectangle(0,.945f*h-height,w,height))){return false;}
+		else{for(int i = 0; i < size();i++){
+			if(get(i).up(touch)){break;}
+		}}
+		return true;
 		
 	}
 
